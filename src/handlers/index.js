@@ -37,7 +37,8 @@ export const createAccount = async (req, res) => {
         lastName: user.lastName,
         email: user.email,
         age: user.age
-      }
+      },
+      redirect: "/login.html"//posible redireccionamiento a login 
     });
   } catch (error) {
     console.error(error);

@@ -12,6 +12,7 @@ import {
 } from "./handlers/index.js"
 import { handleInputErrors } from "./middleware/validation.js"
 import { requireAuth, requireGuest } from "./middleware/auth.js"
+import Task from "./models/Tasks.js"
 
 const router = Router()
 
@@ -178,6 +179,142 @@ router.patch(
         .optional(),
        handleInputErrors,
         requireAuth,
+)
+
+// ============================================
+// 📋 RUTAS DE GESTIÓN DE TAREAS
+// ============================================
+
+/**
+ * Crear nueva tarea.
+ * @name POST /api/tasks
+ */
+router.post(
+    "/api/tasks",
+    body("title").notEmpty().withMessage("El título es obligatorio").trim(),
+    body("description").notEmpty().withMessage("La descripción es obligatoria").trim(),
+    body("priority").isIn(['low', 'medium', 'high']).withMessage("La prioridad debe ser: low, medium o high"),
+    body("status").isIn(['todo', 'inProgress', 'done']).withMessage("El estado debe ser: todo, inProgress o done"),
+    body("start").isISO8601().withMessage("La fecha de inicio debe ser válida"),
+    body("end").isISO8601().withMessage("La fecha de finalización debe ser válida"),
+    handleInputErrors,
+    async (req, res) => {
+        try {
+            console.log("📝 Creando nueva tarea con datos:", req.body);
+            
+            const { title, description, priority, status, start, end, user } = req.body;
+
+            const newTask = new Task({
+                title,
+                description,
+                priority,
+                status,
+                start,
+                end,
+                user,
+            });
+
+            await newTask.save();
+            console.log("✅ Tarea creada exitosamente:", newTask);
+            res.status(201).json(newTask);
+        } catch (err) {
+            console.error("❌ Error creando tarea:", err);
+            res.status(500).json({ error: err.message });
+        }
+    }
+)
+
+/**
+ * Obtener todas las tareas.
+ * @name GET /api/tasks
+ */
+router.get(
+    "/api/tasks",
+    async (req, res) => {
+        try {
+            console.log("📋 Obteniendo todas las tareas");
+            const tasks = await Task.find().populate("user", "firstName lastName email");
+            console.log('✅ Se encontraron ${tasks.length} tareas');
+            res.json(tasks);
+        } catch (err) {
+            console.error("❌ Error obteniendo tareas:", err);
+            res.status(500).json({ error: err.message });
+        }
+    }
+)
+
+/**
+ * Actualizar tarea.
+ * @name PUT /api/tasks/:id
+ */
+router.put(
+    "/api/tasks/:id",
+    body("title").optional().notEmpty().withMessage("El título no puede estar vacío").trim(),
+    body("description").optional().notEmpty().withMessage("La descripción no puede estar vacía").trim(),
+    body("priority").optional().isIn(['low', 'medium', 'high']).withMessage("La prioridad debe ser: low, medium o high"),
+    body("status").optional().isIn(['todo', 'inProgress', 'done']).withMessage("El estado debe ser: todo, inProgress o done"),
+    body("start").optional().isISO8601().withMessage("La fecha de inicio debe ser válida"),
+    body("end").optional().isISO8601().withMessage("La fecha de finalización debe ser válida"),
+    handleInputErrors,
+    async (req, res) => {
+        try {
+            console.log("✏ Actualizando tarea con ID:", req.params.id);
+            console.log("Datos a actualizar:", req.body);
+            
+            const { title, description, priority, status, start, end } = req.body;
+            
+            const updatedTask = await Task.findByIdAndUpdate(
+                req.params.id,
+                {
+                    ...(title && { title }),
+                    ...(description && { description }),
+                    ...(priority && { priority }),
+                    ...(status && { status }),
+                    ...(start && { start }),
+                    ...(end && { end }),
+                },
+                { 
+                    new: true,
+                    runValidators: true
+                }
+            ).populate("user", "firstName lastName email");
+
+            if (!updatedTask) {
+                return res.status(404).json({ error: "Tarea no encontrada" });
+            }
+
+            console.log("✅ Tarea actualizada exitosamente:", updatedTask);
+            res.json(updatedTask);
+        } catch (err) {
+            console.error("❌ Error actualizando tarea:", err);
+            res.status(500).json({ error: err.message });
+        }
+    }
+)
+
+/**
+ * Eliminar tarea.
+ * @name DELETE /api/tasks/:id
+ */
+router.delete(
+    "/api/tasks/:id",
+    async (req, res) => {
+        try {
+            console.log("🗑 Eliminando tarea con ID:", req.params.id);
+            
+            const deletedTask = await Task.findByIdAndDelete(req.params.id);
+            
+            if (!deletedTask) {
+                return res.status(404).json({ error: "Tarea no encontrada" });
+            }
+
+            console.log("✅ Tarea eliminada exitosamente:", deletedTask);
+            res.json({ message: "Tarea eliminada exitosamente", task: deletedTask });
+        } catch (err) {
+            console.error("❌ Error eliminando tarea:", err);
+            res.status(500).json({ error: err.message });
+        }
+    }
 )
 
 export default router

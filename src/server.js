@@ -19,7 +19,7 @@ const app = express()
 connectDB()
 
 /**
- * Middleware de CORS con la configuración definida en `corsConfig`.
+ * Middleware de CORS con la configuración definida en corsConfig.
  */
 app.use(cors(corsConfig))
 
@@ -32,6 +32,7 @@ app.use(express.json())
  * Router principal de la aplicación.
  */
 app.use('/', router)
+
 
 /**
  * Middleware para parsear cookies en las solicitudes.
