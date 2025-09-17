@@ -60,3 +60,19 @@ export const validateEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
     return emailRegex.test(email)
 }
+
+/**
+ * Extrae el id de un JWT
+ * @param {string} token - El token JWT recibido (sin "Bearer ")
+ * @returns {string|null} id del usuario o null si el token no es válido
+ */
+export const getUserIdFromToken = (token) => {
+  try {
+    // Verificamos el token con la misma secret que usaste al firmarlo
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return decoded.id; // Retornamos el id del usuario
+  } catch (error) {
+    console.error("Error al verificar token:", error.message);
+    return null;
+  }
+};

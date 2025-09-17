@@ -196,8 +196,108 @@ export const forgotPassword = async (req, res) => {
     return res.status(404).json({ error: error.message });
   }
 
-  const token = "aasdasdadsasdasd";
-  await AuthEmail.sendConfirmationEmail({ name: user.firstName, email: user.email, token });
+  await AuthEmail.sendConfirmationEmail({ name: user.firstName, email: user.email, id: user._id });
 
   res.json({ msg: "Hemos enviado un email con las instrucciones" });
+};
+
+/**
+ * Restablece la contraseña de un usuario a partir de un id recibido en los query params.
+ *
+ * @async
+ * @function resetPassword
+ * @param {Object} req - Objeto de petición HTTP.
+ * @param {Object} res - Objeto de respuesta HTTP.
+ * @returns {Promise<void>} Respuesta HTTP con mensaje de éxito o error.
+ *
+ * @example
+ * // POST /reset-password?id=123
+ * // Body: { "password": "12345678", "confirmPassword": "12345678" }
+ * // Response: { "msg": "Contraseña actualizada correctamente" }
+ */
+
+export const resetPassword = async (req, res) => {
+  const {password, confirmPassword} = req.body;
+  const {id} = req.query;
+
+  if(password !== confirmPassword) {
+    return res.status(400).json({error: "Las contraseñas no coinciden"});
+  }
+  const user = await User.findById(id);
+  if(!user) {
+    return res.status(404).json({error: "Usuario no encontrado"});
+  }
+  user.password = await hashPassword(password);
+  await user.save();
+  res.json({msg: "Contraseña actualizada correctamente"});
+}
+
+/**
+ * Obtiene un usuario por su ID desde los query params.
+ * Excluye ciertos campos sensibles en la respuesta.
+ *
+ * @async
+ * @function getUserById
+ * @param {Object} req - Objeto de petición HTTP.
+ * @param {Object} res - Objeto de respuesta HTTP.
+ * @returns {Promise<void>} Respuesta HTTP con el objeto usuario o un error.
+ *
+ * @example
+ * // GET /user?id=123
+ * // Response: { "user": { "_id": "123", ... } }
+ */
+export const getUserById = async (req, res) => {
+  const { id } = req.query;
+  try {
+    const user = await User.findById(id).select('-firstName -lastName -age -email');
+    if (!user) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+    res.status(200).json({ user });
+  } catch (error) {
+    console.error("Error en getUserById:", error);
+    res.status(500).json({ error: "Error al obtener datos del usuario" });
+  }
+}
+
+
+/**
+ * Actualiza los datos de un usuario autenticado.
+ * Solo se actualizan los campos que no sean null, undefined o string vacío.
+ *
+ * @async
+ * @function updateUser
+ * @param {Object} req - Objeto de petición HTTP. Se espera que `req.user` contenga el id del usuario autenticado.
+ * @param {Object} res - Objeto de respuesta HTTP.
+ * @returns {Promise<void>} Respuesta HTTP con el usuario actualizado o un error.
+ *
+ * @example
+ * // PUT /user
+ * // Body: { "firstName": "Juan", "age": 25 }
+ * // Response: { "message": "Usuario actualizado correctamente", "user": {...} }
+ */
+export const updateUser = async (req, res) => {
+  const { id } = req.user;
+  const updates = req.body;
+
+  try {
+    const user = await User.findById(id); 
+    if (!user) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    // Solo actualiza si el valor no es null, undefined o string vacío
+    Object.keys(updates).forEach((key) => {
+      const value = updates[key];
+      if (value !== null && value !== undefined && value !== "") {
+        user[key] = value;
+      }
+    });
+
+    await user.save();
+    res.status(200).json({ message: "Usuario actualizado correctamente", user });
+  } catch (error) {
+    console.error("Error en updateUser:", error);
+    res.status(500).json({ error: "Error al actualizar datos del usuario" });
+  }
 };

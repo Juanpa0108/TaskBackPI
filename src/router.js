@@ -6,7 +6,9 @@ import {
     logoutUser, 
     getCurrentUser,
     verifyAuth,
-    forgotPassword
+    forgotPassword,
+    resetPassword,
+    getUserById
 } from "./handlers/index.js"
 import { handleInputErrors } from "./middleware/validation.js"
 import { requireAuth, requireGuest } from "./middleware/auth.js"
@@ -137,6 +139,45 @@ router.post(
     body("email").isEmail().withMessage("El email no es válido"),
     handleInputErrors,
     forgotPassword
+)
+
+/**
+ * Recuperación de contraseña.
+ * @name POST /reset-password
+ * @function
+ * @memberof module:Router
+ * @param {string} password - contraseña válido.
+ * @param {string} confirmPassword - contraseña válido.
+ * 
+ */
+router.post(
+    "/reset-password",
+    body("password").isLength({ min: 8 }).withMessage("La contraseña debe tener mínimo 8 caracteres"),
+    body("confirm-password").isLength({ min: 8 }).withMessage("La contraseña debe tener mínimo 8 caracteres"),
+    handleInputErrors,
+    resetPassword
+)
+
+router.get(
+    "/get-user-by-id",
+    requireAuth,
+    getUserById
+)
+
+router.patch(
+    "/update-user",
+    body("firstName")
+        .optional(),
+    body("lastName")
+        .optional(),
+    body("email")
+        .optional(),
+    body("age")
+        .optional(),
+    body("password")
+        .optional(),
+       handleInputErrors,
+        requireAuth,
 )
 
 export default router

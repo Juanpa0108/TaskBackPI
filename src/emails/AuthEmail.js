@@ -21,11 +21,11 @@ export class AuthEmail {
         const email = await transport.sendMail({
             from: 'Task App - Administrador de Proyectos <admin@taskflow.com>',
             to: user.email,
-            subject: 'Restablece tu contraseña en Task App',
+            subject: 'Restablece tu contraseña en TaskFlow',
             html: `
-                <p>Hola ${user.name}, has solicitado restablecer tu contraseña en Task App.</p>
+                <p>Hola ${user.name}, has solicitado restablecer tu contraseña en TaskFlow.</p>
                 <p>Haz click en el siguiente enlace para generar una nueva: 
-                <a href="${process.env.FRONTEND_URL}/auth/forgot-password/${user.token}">Restablecer Contraseña</a></p>
+                <a href="${process.env.FRONTEND_URL}/resetPassword?id=${user.id}">Restablecer Contraseña</a></p>
                 <p>Si no solicitaste este cambio, puedes ignorar este mensaje.</p>
             `
         });
