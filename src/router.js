@@ -121,6 +121,45 @@ router.post(
     forgotPassword
 )
 
+/**
+ * Recuperación de contraseña.
+ * @name POST /reset-password
+ * @function
+ * @memberof module:Router
+ * @param {string} password - contraseña válido.
+ * @param {string} confirmPassword - contraseña válido.
+ * 
+ */
+router.post(
+    "/reset-password",
+    body("password").isLength({ min: 8 }).withMessage("La contraseña debe tener mínimo 8 caracteres"),
+    body("confirm-password").isLength({ min: 8 }).withMessage("La contraseña debe tener mínimo 8 caracteres"),
+    handleInputErrors,
+    resetPassword
+)
+
+router.get(
+    "/get-user-by-id",
+    requireAuth,
+    getUserById
+)
+
+router.patch(
+    "/update-user",
+    body("firstName")
+        .optional(),
+    body("lastName")
+        .optional(),
+    body("email")
+        .optional(),
+    body("age")
+        .optional(),
+    body("password")
+        .optional(),
+       handleInputErrors,
+        requireAuth,
+)
+
 // ============================================
 // 📋 RUTAS DE GESTIÓN DE TAREAS
 // ============================================
