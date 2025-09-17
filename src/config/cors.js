@@ -17,7 +17,11 @@
  */
 export const corsConfig = {
   origin: function (origin, callback) {
-    const whiteList = [process.env.FRONTEND_URL];
+    const whiteList = [
+      process.env.FRONTEND_URL,
+      "http://localhost:5173",
+      "http://localhost:5174"
+    ];
 
     // si levantas sin frontend, permitir undefined (cuando Postman/Insomnia no mandan origin)
     if (process.argv[2] === "--api") {
