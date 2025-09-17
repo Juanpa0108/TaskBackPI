@@ -33,6 +33,7 @@ app.use(express.json())
  */
 app.use('/', router)
 
+
 /**
  * Middleware para parsear cookies en las solicitudes.
  */
