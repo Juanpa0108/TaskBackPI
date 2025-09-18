@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import router from './router.js'
+import taskRoutes from './task.routes.js'
 import 'dotenv/config'
 import { connectDB } from './config/db.js'
 import { corsConfig } from './config/cors.js'
@@ -29,15 +30,19 @@ app.use(cors(corsConfig))
 app.use(express.json())
 
 /**
+ * Middleware para parsear cookies en las solicitudes.
+ */
+app.use(cookieParser())
+
+/**
  * Router principal de la aplicación.
  */
 app.use('/', router)
 
-
 /**
- * Middleware para parsear cookies en las solicitudes.
+ * Router de tareas.
  */
-app.use(cookieParser())
+app.use('/', taskRoutes)
 
 /**
  * Middleware de manejo de errores global.
