@@ -2,11 +2,11 @@ import { verifyToken } from '../utils/auths.js';
 import User from '../models/User.js';
 
 /**
- * Middleware para autenticar al usuario con JWT.
+ *  Middleware to authenticate the user using JWT.
  * 
- * @param {Request} req Objeto de la petición.
- * @param {Response} res Objeto de la respuesta.
- * @param {NextFunction} next Función para continuar al siguiente middleware.
+ * @param {Request} req - Request object.
+ * @param {Response} res - Response object.
+ * @param {NextFunction} next - Function to proceed to the next middleware.
  * @returns {Promise<void>}
  */
 export const authenticate = async (req, res, next) => {
@@ -51,19 +51,20 @@ export const authenticate = async (req, res, next) => {
 };
 
 /**
- * Middleware alias para exigir autenticación.
+ * Alias middleware to require authentication.
  * @type {Function}
  */
 export const requireAuth = authenticate;
 
 /**
- * Middleware para rutas que requieren estar deslogueado
- * (ejemplo: login o registro).
+ * Middleware for routes that require the user to be logged out
+ * (e.g., login or registration).
  * 
- * @param {Request} req Objeto de la petición.
- * @param {Response} res Objeto de la respuesta.
- * @param {NextFunction} next Función para continuar.
+ * @param {Request} req - Request object.
+ * @param {Response} res - Response object.
+ * @param {NextFunction} next - Function to proceed to the next middleware.
  */
+
 export const requireGuest = (req, res, next) => {
     let token;
 
@@ -81,7 +82,7 @@ export const requireGuest = (req, res, next) => {
                 redirect: '/mainDashBoard.html'
             });
         } catch (error) {
-            // Token inválido, continuar
+            //Invalid token, continue
         }
     }
 

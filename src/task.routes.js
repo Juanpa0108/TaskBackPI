@@ -8,7 +8,7 @@ import { handleInputErrors } from "./middleware/validation.js";
 const router = express.Router();
 
 /**
- * Obtener todas las tareas DEL USUARIO AUTENTICADO.
+ * Get all tasks of the AUTHENTICATED USER.
  * @name GET /api/tasks
  */
 router.get(
@@ -31,7 +31,7 @@ router.get(
 );
 
 /**
- * Crear nueva tarea (siempre asociada al usuario autenticado).
+ * Create a new task (always associated with the authenticated user).
  * @name POST /api/tasks
  */
 router.post(
@@ -73,7 +73,7 @@ router.post(
 );
 
 /**
- * Actualizar tarea (solo si pertenece al usuario autenticado).
+ * Update a task (only if it belongs to the authenticated user).
  * @name PUT /api/tasks/:id
  */
 router.put(
@@ -93,11 +93,11 @@ router.put(
             
             const { title, description, priority, status, start, end } = req.body;
             
-            // Buscar y actualizar solo tareas del usuario autenticado
+            // Find and update only tasks of the authenticated user
             const updatedTask = await Task.findOneAndUpdate(
                 { 
                     _id: req.params.id, 
-                    user: req.user._id // ← VERIFICAR QUE LA TAREA PERTENEZCA AL USUARIO
+                    user: req.user._id // ← // Verify that the task belongs to the user
                 },
                 {
                     ...(title && { title }),
@@ -127,7 +127,7 @@ router.put(
 );
 
 /**
- * Eliminar tarea (solo si pertenece al usuario autenticado).
+ * Delete a task (only if it belongs to the authenticated user).
  * @name DELETE /api/tasks/:id
  */
 router.delete(
@@ -138,10 +138,10 @@ router.delete(
             console.log("🗑️ Eliminando tarea con ID:", req.params.id);
             console.log("Usuario autenticado:", req.user._id);
             
-            // Buscar y eliminar solo tareas del usuario autenticado
+            // Find and delete only tasks of the authenticated user
             const deletedTask = await Task.findOneAndDelete({
                 _id: req.params.id,
-                user: req.user._id // ← VERIFICAR QUE LA TAREA PERTENEZCA AL USUARIO
+                user: req.user._id // ← Verify that the task belongs to the user
             });
             
             if (!deletedTask) {

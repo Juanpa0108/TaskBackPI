@@ -1,17 +1,17 @@
 /**
- * Representa un usuario en la base de datos.
+ * Represents a user in the database.
  * 
  * @typedef {Object} IUser
- * @property {string} firstName Nombre del usuario
- * @property {string} lastName Apellido del usuario
- * @property {number} age Edad
- * @property {string} email Correo electrónico
- * @property {string} password Contraseña hasheada
- * @property {number} [loginAttempts] Intentos fallidos de login
- * @property {Date} [lockUntil] Fecha hasta la que está bloqueado
- * @property {Date} createdAt Fecha de creación
+ * @property {string} firstName User's first name
+ * @property {string} lastName User's last name
+ * @property {number} age Age
+ * @property {string} email Email address
+ * @property {string} password Hashed password
+ * @property {number} [loginAttempts] Failed login attempts
+ * @property {Date} [lockUntil] Date until the user is locked
+ * @property {Date} createdAt Creation date
  * 
- * @property {function(): boolean} isLocked Verifica si el usuario está bloqueado
- * @property {function(): Promise<any>} incLoginAttempts Incrementa intentos fallidos
- * @property {function(): Promise<any>} resetLoginAttempts Reinicia intentos fallidos
+ * @property {function(): boolean} isLocked Checks if the user is locked
+ * @property {function(): Promise<any>} incLoginAttempts Increments failed login attempts
+ * @property {function(): Promise<any>} resetLoginAttempts Resets failed login attempts
  */

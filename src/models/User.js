@@ -1,8 +1,8 @@
 import mongoose, { Schema } from "mongoose"
 
 /**
- * Esquema de usuario en MongoDB.
- * Contiene la información personal, credenciales y seguridad de login.
+ * User schema in MongoDB.
+ * Contains personal information, credentials, and login security.
  * 
  * @constant
  * @type {mongoose.Schema}
@@ -48,21 +48,21 @@ const userSchema = new Schema({
 })
 
 /**
- * Verifica si la cuenta del usuario está bloqueada.
+ * Checks if the user's account is locked.
  * @function isLocked
  * @memberof userSchema.methods
- * @returns {boolean} `true` si el usuario está bloqueado, `false` en caso contrario.
+ * @returns {boolean} `true` if the user is locked, `false` otherwise.
  */
 userSchema.methods.isLocked = function() {
     return this.lockUntil && this.lockUntil.getTime() > Date.now()
 }
 
 /**
- * Incrementa los intentos fallidos de inicio de sesión del usuario.
- * Si llega a 5 intentos, bloquea la cuenta por 15 minutos.
+ * Increments the user's failed login attempts.
+ * If it reaches 5 attempts, locks the account for 15 minutes.
  * @function incLoginAttempts
  * @memberof userSchema.methods
- * @returns {Promise<mongoose.UpdateWriteOpResult>} Resultado de la operación de actualización.
+ * @returns {Promise<mongoose.UpdateWriteOpResult>} Result of the update operation.
  */
 userSchema.methods.incLoginAttempts = function() {
     if (this.lockUntil && this.lockUntil.getTime() < Date.now()) {
@@ -77,7 +77,7 @@ userSchema.methods.incLoginAttempts = function() {
         return this.updateOne({
             $set: {
                 loginAttempts: newAttempts,
-                lockUntil: new Date(Date.now() + 15 * 60 * 1000) // 15 minutos
+                lockUntil: new Date(Date.now() + 15 * 60 * 1000) // 15 minuts
             }
         })
     } else {
@@ -88,10 +88,10 @@ userSchema.methods.incLoginAttempts = function() {
 }
 
 /**
- * Reinicia los intentos de login fallidos y desbloquea la cuenta.
+ * Resets failed login attempts and unlocks the account.
  * @function resetLoginAttempts
  * @memberof userSchema.methods
- * @returns {Promise<mongoose.UpdateWriteOpResult>} Resultado de la operación de actualización.
+ * @returns {Promise<mongoose.UpdateWriteOpResult>} Result of the update operation.
  */
 userSchema.methods.resetLoginAttempts = function() {
     return this.updateOne({
@@ -100,7 +100,7 @@ userSchema.methods.resetLoginAttempts = function() {
 }
 
 /**
- * Modelo de usuario basado en el esquema `userSchema`.
+ * User model based on the `userSchema`.
  * 
  * @constant
  * @type {mongoose.Model<mongoose.Document>}

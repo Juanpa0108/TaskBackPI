@@ -3,12 +3,12 @@ import { hashPassword, checkPassword, generateToken } from "../utils/auths.js";
 import { AuthEmail } from "../emails/AuthEmail.js";
 
 /**
- * Crea una nueva cuenta de usuario.
+ *Creates a new user account.
  * 
  * @async
  * @function createAccount
- * @param {Request} req Objeto de solicitud HTTP
- * @param {Response} res Objeto de respuesta HTTP
+ * @param {Request} req - HTTP request object
+ * @param {Response} res - HTTP response object
  * @returns {Promise<void>}
  */
 export const createAccount = async (req, res) => {
@@ -47,12 +47,12 @@ export const createAccount = async (req, res) => {
 };
 
 /**
- * Inicia sesión de usuario.
- *
+ *  User login.
+ * 
  * @async
  * @function loginUser
- * @param {Request} req Objeto de solicitud HTTP
- * @param {Response} res Objeto de respuesta HTTP
+ * @param {Request} req - HTTP request object
+ * @param {Response} res - HTTP response object
  * @returns {Promise<void>}
  */
 export const loginUser = async (req, res) => {
@@ -101,12 +101,12 @@ export const loginUser = async (req, res) => {
 };
 
 /**
- * Cierra sesión de usuario.
+ * User logout.
  *
  * @async
  * @function logoutUser
- * @param {Request} req Objeto de solicitud HTTP
- * @param {Response} res Objeto de respuesta HTTP
+ * @param {Request} req - HTTP request object
+ * @param {Response} res - HTTP response object
  * @returns {Promise<void>}
  */
 export const logoutUser = async (req, res) => {
@@ -132,8 +132,8 @@ export const logoutUser = async (req, res) => {
  *
  * @async
  * @function getCurrentUser
- * @param {Request} req Objeto de solicitud HTTP
- * @param {Response} res Objeto de respuesta HTTP
+ * @param {Request} req - HTTP request object
+ * @param {Response} res - HTTP response object
  * @returns {Promise<void>}
  */
 export const getCurrentUser = async (req, res) => {
@@ -156,12 +156,12 @@ export const getCurrentUser = async (req, res) => {
 };
 
 /**
- * Verifica si un usuario está autenticado.
+ * Checks if a user is authenticated.
  *
  * @async
  * @function verifyAuth
- * @param {Request} req Objeto de solicitud HTTP
- * @param {Response} res Objeto de respuesta HTTP
+ * @param {Request} req - HTTP request object
+ * @param {Response} res - HTTP response object
  * @returns {Promise<void>}
  */
 export const verifyAuth = async (req, res) => {
@@ -182,12 +182,12 @@ export const verifyAuth = async (req, res) => {
 };
 
 /**
- * Inicia el proceso de recuperación de contraseña.
+ * Initiates the password recovery process.
  *
  * @async
  * @function forgotPassword
- * @param {Request} req Objeto de solicitud HTTP
- * @param {Response} res Objeto de respuesta HTTP
+ * @param {Request} req - HTTP request object
+ * @param {Response} res - HTTP response object
  * @returns {Promise<void>}
  */
 export const forgotPassword = async (req, res) => {
@@ -196,11 +196,11 @@ export const forgotPassword = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      // Responder 200 para no filtrar si existe o no, mejorar UX
+      // Respond with 200 to avoid revealing whether the user exists, improving UX
       return res.json({ msg: "Si el correo existe, enviaremos instrucciones." });
     }
 
-    // Modo desarrollo o sin SMTP: devolver/registrar el enlace directamente
+    //  Development mode or without SMTP: return/log the link directly
     const resetUrl = `${process.env.FRONTEND_URL}/resetPassword?id=${user._id}`;
     const devMode = process.env.NODE_ENV !== 'production' || !process.env.EMAIL_HOST || !process.env.EMAIL_USER || !process.env.EMAIL_PASS;
     if (devMode) {
@@ -212,7 +212,7 @@ export const forgotPassword = async (req, res) => {
       await AuthEmail.sendConfirmationEmail({ name: user.firstName, email: user.email, id: user._id });
     } catch (mailErr) {
       console.error("Error enviando email:", mailErr);
-      // Responder éxito genérico para no bloquear el flujo del usuario
+      // Respond with a generic success to avoid blocking the user's flow
       return res.json({ msg: "Si el correo existe, enviaremos instrucciones." });
     }
 
@@ -224,12 +224,12 @@ export const forgotPassword = async (req, res) => {
 };
 
 /**
- * Restablece la contraseña de un usuario a partir de un id recibido en los query params.
+ * Resets a user's password using an ID received in the query parameters.
  *
  * @async
  * @function resetPassword
- * @param {Object} req - Objeto de petición HTTP.
- * @param {Object} res - Objeto de respuesta HTTP.
+ * @param {Object} req - HTTP request object
+ * @param {Object} res - HTTP response object
  * @returns {Promise<void>} Respuesta HTTP con mensaje de éxito o error.
  *
  * @example
@@ -255,14 +255,14 @@ export const resetPassword = async (req, res) => {
 }
 
 /**
- * Obtiene un usuario por su ID desde los query params.
- * Excluye ciertos campos sensibles en la respuesta.
+ * Retrieves a user by their ID from the query parameters.
+ * Excludes certain sensitive fields in the response.
  *
  * @async
  * @function getUserById
- * @param {Object} req - Objeto de petición HTTP.
- * @param {Object} res - Objeto de respuesta HTTP.
- * @returns {Promise<void>} Respuesta HTTP con el objeto usuario o un error.
+ * @param {Object} req - HTTP request object
+ * @param {Object} res - HTTP response object
+ * @returns {Promise<void>} HTTP response with the user object or an error.
  *
  * @example
  * // GET /user?id=123
@@ -284,15 +284,15 @@ export const getUserById = async (req, res) => {
 
 
 /**
- * Actualiza los datos de un usuario autenticado.
- * Solo se actualizan los campos que no sean null, undefined o string vacío.
+ * Updates the authenticated user's data.
+ * Only fields that are not null, undefined, or empty strings will be updated.
  *
  * @async
  * @function updateUser
- * @param {Object} req - Objeto de petición HTTP. Se espera que `req.user` contenga el id del usuario autenticado.
- * @param {Object} res - Objeto de respuesta HTTP.
- * @returns {Promise<void>} Respuesta HTTP con el usuario actualizado o un error.
- *
+ * @param {Object} req - HTTP request object. `req.user` is expected to contain the authenticated user's ID.
+ * @param {Object} res - HTTP response object.
+ * @returns {Promise<void>} HTTP response with the updated user or an error.
+ 
  * @example
  * // PUT /user
  * // Body: { "firstName": "Juan", "age": 25 }
@@ -308,7 +308,7 @@ export const updateUser = async (req, res) => {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
-    // Solo actualiza si el valor no es null, undefined o string vacío
+    // Only update if the value is not null, undefined, or an empty string
     Object.keys(updates).forEach((key) => {
       const value = updates[key];
       if (value !== null && value !== undefined && value !== "") {

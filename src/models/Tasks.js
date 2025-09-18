@@ -1,5 +1,17 @@
 import mongoose from "mongoose";
-
+/**
+ * Task model
+ * @typedef {Object} Task
+ * @property {string} title - Title of the task
+ * @property {string} description - Description of the task
+ * @property {string} priority - Task priority ("low", "medium", "high")
+ * @property {string} status - Task status ("todo", "inProgress", "done")
+ * @property {Date} start - Start date
+ * @property {Date} end - End date
+ * @property {mongoose.Schema.Types.ObjectId} user - Reference to the User
+ * @property {Date} createdAt - Creation timestamp
+ * @property {Date} updatedAt - Last update timestamp
+ */
 const taskSchema = new mongoose.Schema(
   {
     title: {
@@ -26,17 +38,17 @@ const taskSchema = new mongoose.Schema(
       default: "todo",
     },
 
-    // Fechas
+    // Dates
     start: {
       type: Date,
-      default: Date.now, // por defecto la fecha actual
+      default: Date.now, 
     },
     end: {
       type: Date,
       required: [true, "La fecha de finalización es obligatoria"],
     },
 
-    // Relación con usuario
+    // User relationship
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -44,7 +56,7 @@ const taskSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // crea createdAt y updatedAt
+    timestamps: true, // automatically creates createdAt and updatedAt
   }
 );
 

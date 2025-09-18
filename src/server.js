@@ -9,55 +9,56 @@ import { corsConfig } from './config/cors.js'
 import cookieParser from 'cookie-parser'
 
 /**
- * Instancia principal de la aplicación Express.
+ * Main instance of the Express application.
  * @type {Application}
  */
 const app = express()
 
 /**
- * Conexión a la base de datos.
+ * Database connection.
  * @function
  */
 connectDB()
 verifyEmailTransport()
 
 /**
- * Middleware de CORS con la configuración definida en corsConfig.
+ * CORS middleware with the configuration defined in corsConfig.
  */
 app.use(cors(corsConfig))
 
 /**
- * Middleware para parsear cuerpos de solicitudes en formato JSON.
+ * Middleware to parse request bodies in JSON format.
  */
 app.use(express.json())
 
 /**
- * Middleware para parsear cookies en las solicitudes.
+ * Middleware to parse cookies in requests.
  */
 app.use(cookieParser())
 
 /**
- * Router principal de la aplicación.
+ * Main router of the application.
  */
 app.use('/', router)
 
 /**
- * Router de tareas.
+ * Task router.
  */
 app.use('/', taskRoutes)
 
 /**
- * Middleware de manejo de errores global.
+ * Global error handling middleware.
  * 
- * - Maneja errores relacionados con JWT (token inválido o expirado).
- * - Retorna mensajes de error detallados en entorno de desarrollo.
- * - En producción retorna un mensaje genérico.
+ * - Handles errors related to JWT (invalid or expired token).
+ * - Returns detailed error messages in development environment.
+ * - Returns a generic message in production.
  * 
- * @param {Error} err - Objeto de error lanzado.
- * @param {Request} req - Objeto de solicitud.
- * @param {Response} res - Objeto de respuesta.
- * @param {NextFunction} next - Función para pasar al siguiente middleware.
+ * @param {Error} err - Thrown error object.
+ * @param {Request} req - Request object.
+ * @param {Response} res - Response object.
+ * @param {NextFunction} next - Function to pass control to the next middleware.
  */
+
 app.use((err, req, res, next) => {
     console.error('Error:', err)
     
@@ -77,10 +78,10 @@ app.use((err, req, res, next) => {
 })
 
 /**
- * Middleware para manejar rutas inexistentes (404).
+ * Middleware to handle non-existent routes (404).
  * 
- * @param {Request} req - Objeto de solicitud.
- * @param {Response} res - Objeto de respuesta.
+ * @param {Request} req - Request object.
+ * @param {Response} res - Response object.
  */
 app.use('*', (req, res) => {
     res.status(404).json({ error: 'Ruta no encontrada' })
