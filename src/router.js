@@ -19,19 +19,19 @@ const router = Router()
 
 /**
  * @module Router
- * @description Rutas principales de autenticación y acceso del sistema.
+ * @description Main authentication and system access routes.
  */
 
 /**
- * Registro de usuario.
+ * User registration.
  * @name POST /auth/register
  * @function
  * @memberof module:Router
- * @param {string} firstName - Nombre del usuario (mínimo 2, máximo 50 caracteres).
- * @param {string} lastName - Apellido del usuario (mínimo 2, máximo 50 caracteres).
- * @param {string} email - Correo electrónico válido.
- * @param {number} age - Edad del usuario (entre 12 y 120).
- * @param {string} password - Contraseña con mínimo 8 caracteres, incluyendo mayúscula, minúscula y número.
+ * @param {string} firstName - User's first name (minimum 2, maximum 50 characters).
+ * @param {string} lastName - User's last name (minimum 2, maximum 50 characters).
+ * @param {string} email - Valid email address.
+ * @param {number} age - User's age (between 12 and 120).
+ * @param {string} password - Password with at least 8 characters, including uppercase, lowercase, and number.
  */
 router.post(
     "/auth/register",
@@ -56,12 +56,12 @@ router.post(
 )
 
 /**
- * Login de usuario.
+ * User login.
  * @name POST /auth/login
  * @function
  * @memberof module:Router
- * @param {string} email - Correo electrónico válido.
- * @param {string} password - Contraseña con mínimo 8 caracteres.
+ * @param {string} email - Valid email address.
+ * @param {string} password - Password with at least 8 characters.
  */
 router.post(
     "/auth/login",
@@ -72,7 +72,7 @@ router.post(
 )
 
 /**
- * Logout de usuario.
+ * Logout user.
  * @name POST /auth/logout
  * @function
  * @memberof module:Router
@@ -84,7 +84,7 @@ router.post(
 )
 
 /**
- * Obtener usuario actual autenticado.
+ *  Get the currently authenticated user.
  * @name GET /auth/user
  * @function
  * @memberof module:Router
@@ -96,7 +96,7 @@ router.get(
 )
 
 /**
- * Verificar si el token es válido.
+ * Verify if the token is valid.
  * @name GET /auth/verify
  * @function
  * @memberof module:Router
@@ -108,7 +108,7 @@ router.get(
 )
 
 /**
- * Ruta protegida de ejemplo: Dashboard.
+ * Example protected route: Dashboard.
  * @name GET /mainDashBoard.html
  * @function
  * @memberof module:Router
@@ -131,11 +131,11 @@ router.get(
 )
 
 /**
- * Recuperación de contraseña.
+ * Password recovery.
  * @name POST /forgot-password
  * @function
  * @memberof module:Router
- * @param {string} email - Correo electrónico válido.
+ * @param {string} email - Valid email address.
  */
 router.post(
     "/forgot-password",
@@ -145,14 +145,14 @@ router.post(
 )
 
 /**
- * Recuperación de contraseña.
+ * Password recovery.
  * @name POST /reset-password
  * @function
  * @memberof module:Router
- * @param {string} password - contraseña válido.
- * @param {string} confirmPassword - contraseña válido.
- * 
+ * @param {string} password - Valid password.
+ * @param {string} confirmPassword - Valid password.
  */
+
 router.post(
     "/reset-password",
     body("password").isLength({ min: 8 }).withMessage("La contraseña debe tener mínimo 8 caracteres"),
@@ -179,9 +179,9 @@ router.patch(
     updateUser
 )
 
+// // ============================================
+// 📋 TASK MANAGEMENT ROUTES
 // ============================================
-// 📋 RUTAS DE GESTIÓN DE TAREAS
-// ============================================
-// Las rutas de tareas se manejan en task.routes.js
+// Task routes are handled in task.routes.js
 
 export default router

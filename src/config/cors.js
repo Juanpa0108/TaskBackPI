@@ -1,18 +1,17 @@
 /**
- * Configuración de CORS para la API.
+ * CORS Configuration for the API
  *
- * Define los orígenes permitidos, credenciales, métodos y cabeceras que
- * pueden interactuar con el backend. La lista blanca incluye la URL del
- * frontend definida en la variable de entorno `FRONTEND_URL`.
+ * Defines the allowed origins, credentials, methods, and headers that
+ * can interact with the backend. The whitelist includes the frontend URL
+ * defined in the environment variable `FRONTEND_URL`.
  *
- * Si el backend se levanta con el argumento `--api`, también permite
- * `undefined` como origen (útil para pruebas con Postman/Insomnia).
- *
+ * If the backend is started with the `--api` argument, it also allows
+ * `undefined` as an origin (useful for testing with Postman/Insomnia).
  * @constant
  * @type {CorsOptions}
- * @property {function(string, function): void} origin - Función que valida si el origen está permitido.
- * @property {boolean} credentials - Indica si se permiten cookies/cabeceras de autorización.
- * @property {string[]} methods - Métodos HTTP permitidos.
+ * @property {function(string, function): void} origin - Function that validates whether the origin is allowed.
+ * @property {boolean} credentials - Indicates whether cookies/authorization headers are allowed.
+ * @property {string[]} methods - Allowed HTTP methods.
  * @property {string[]} allowedHeaders - Cabeceras HTTP permitidas.
  */
 export const corsConfig = {
@@ -23,7 +22,8 @@ export const corsConfig = {
       "http://localhost:5174"
     ];
 
-    // si levantas sin frontend, permitir undefined (cuando Postman/Insomnia no mandan origin)
+    // if you start without a frontend, allow undefined (when Postman/Insomnia do not send an origin)
+
     if (process.argv[2] === "--api") {
       whiteList.push(undefined);
     }
@@ -34,7 +34,7 @@ export const corsConfig = {
       callback(new Error("Error de CORS"));
     }
   },
-  credentials: true, // ⚡ importante para que funcione con cookies
+  credentials: true, // important for it to work with cookies
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
 };

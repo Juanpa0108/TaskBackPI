@@ -2,15 +2,15 @@ import mongoose from "mongoose";
 import colors from "colors";
 
 /**
- * Conecta la aplicación a la base de datos MongoDB usando mongoose.
+ * Connects the application to the MongoDB database using mongoose.
  *
- * La URI de conexión se obtiene desde la variable de entorno `MONGO_URI`.
- * Si la conexión es exitosa, muestra en consola el host y puerto de MongoDB.
- * Si ocurre un error, imprime el mensaje en rojo y termina el proceso.
+ * The connection URI is obtained from the environment variable `MONGO_URI`.
+ * If the connection is successful, it logs the MongoDB host and port to the console.
+ * If an error occurs, it prints the message in red and terminates the process.
  *
  * @async
  * @function connectDB
- * @returns {Promise<void>} Una promesa que se resuelve cuando la conexión es exitosa o el proceso termina en caso de error.
+ * @returns {Promise<void>} A promise that resolves when the connection is successful or the process exits in case of an error.
  */
 export const connectDB = async () => {
     try { 

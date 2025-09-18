@@ -2,14 +2,14 @@ import colors from 'colors'
 import app from './server.js'
 
 /**
- * Puerto en el que se ejecuta la aplicación.
- * Se toma de la variable de entorno `PORT` o por defecto 4000.
+ * Port on which the application runs.
+ * Taken from the environment variable `PORT` or defaults to 4000.
  * @type {number|string}
  */
 const port = process.env.PORT || 4000
 
 /**
- * Inicia el servidor Express en el puerto especificado.
+ * Starts the Express server on the specified port.
  * 
  * @function
  * @returns {void}
