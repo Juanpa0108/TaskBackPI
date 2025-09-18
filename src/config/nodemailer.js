@@ -16,12 +16,18 @@ dotenv.config();
  * @property {string} auth.pass - Contraseña o token de aplicación
  */
 const config = () => {
+    const port = Number(process.env.EMAIL_PORT) || 587
     return {
         host: process.env.EMAIL_HOST,
-        port: +process.env.EMAIL_PORT,
+        port,
+        secure: port === 465, // true para 465 (SSL), false para 587 (STARTTLS)
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
+        },
+        tls: {
+            // útil en entornos locales con certificados self-signed
+            rejectUnauthorized: false
         }
     }
 }
@@ -32,3 +38,12 @@ const config = () => {
  * @constant {Transporter}
  */
 export const transport = nodemailer.createTransport(config());
+
+export const verifyEmailTransport = async () => {
+    try {
+        await transport.verify();
+        console.log("✉️  SMTP listo para enviar correos");
+    } catch (err) {
+        console.error("❌ Error verificando SMTP:", err?.message || err);
+    }
+}

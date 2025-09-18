@@ -8,7 +8,8 @@ import {
     verifyAuth,
     forgotPassword,
     resetPassword,
-    getUserById
+    getUserById,
+    updateUser
 } from "./handlers/index.js"
 import { handleInputErrors } from "./middleware/validation.js"
 import { requireAuth, requireGuest } from "./middleware/auth.js"
@@ -167,19 +168,15 @@ router.get(
 )
 
 router.patch(
-    "/update-user",
-    body("firstName")
-        .optional(),
-    body("lastName")
-        .optional(),
-    body("email")
-        .optional(),
-    body("age")
-        .optional(),
-    body("password")
-        .optional(),
-       handleInputErrors,
-        requireAuth,
+    "/auth/user",
+    requireAuth,
+    body("firstName").optional(),
+    body("lastName").optional(),
+    body("email").optional().isEmail().withMessage("Email inválido").normalizeEmail(),
+    body("age").optional().isInt({ min: 12, max: 120 }).withMessage("Edad inválida").toInt(),
+    body("password").optional().isLength({ min: 8 }).withMessage("La contraseña debe tener mínimo 8 caracteres"),
+    handleInputErrors,
+    updateUser
 )
 
 // ============================================

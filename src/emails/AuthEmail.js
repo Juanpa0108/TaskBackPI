@@ -1,3 +1,4 @@
+import nodemailer from 'nodemailer';
 import { transport } from '../config/nodemailer.js';
 
 /**
@@ -18,7 +19,23 @@ export class AuthEmail {
      * @returns {Promise<void>} - No retorna nada, solo envía el correo.
      */
     static sendConfirmationEmail = async (user) => {
-        const email = await transport.sendMail({
+        // Si no hay variables de entorno de SMTP, usar Ethereal para pruebas
+        let tx = transport;
+        if (!process.env.EMAIL_HOST || !process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+            const testAccount = await nodemailer.createTestAccount();
+            tx = nodemailer.createTransport({
+                host: 'smtp.ethereal.email',
+                port: 587,
+                secure: false,
+                auth: {
+                    user: testAccount.user,
+                    pass: testAccount.pass
+                }
+            });
+            console.log('ℹ️ Usando cuenta de prueba Ethereal para envío de correo');
+        }
+
+        const email = await tx.sendMail({
             from: 'Task App - Administrador de Proyectos <admin@taskflow.com>',
             to: user.email,
             subject: 'Restablece tu contraseña en TaskFlow',
@@ -30,5 +47,9 @@ export class AuthEmail {
             `
         });
         console.log('mensaje enviado', email.messageId);
+        const previewUrl = nodemailer.getTestMessageUrl(email);
+        if (previewUrl) {
+            console.log('📨 Vista previa del email (Ethereal):', previewUrl);
+        }
     }
 }
