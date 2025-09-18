@@ -122,7 +122,8 @@ router.get(
                 id: req.user.id,
                 firstName: req.user.firstName,
                 lastName: req.user.lastName,
-                email: req.user.email
+                email: req.user.email,
+                age: req.user.age
             }
         })
     }

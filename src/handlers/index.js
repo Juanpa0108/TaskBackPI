@@ -38,7 +38,7 @@ export const createAccount = async (req, res) => {
         email: user.email,
         age: user.age
       },
-      redirect: "/login.html"//posible redireccionamiento a login 
+      redirect: "/login.html"
     });
   } catch (error) {
     console.error(error);
@@ -145,7 +145,8 @@ export const getCurrentUser = async (req, res) => {
         id: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
-        email: user.email
+        email: user.email,
+        age: user.age
       }
     });
   } catch (error) {
@@ -171,7 +172,8 @@ export const verifyAuth = async (req, res) => {
         id: req.user.id,
         firstName: req.user.firstName,
         lastName: req.user.lastName,
-        email: req.user.email
+        email: req.user.email,
+        age: req.user.age
       }
     });
   } catch (error) {
