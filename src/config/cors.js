@@ -35,6 +35,6 @@ export const corsConfig = {
     }
   },
   credentials: true, // ⚡ importante para que funcione con cookies
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
 };

@@ -4,6 +4,7 @@ import router from './router.js'
 import taskRoutes from './task.routes.js'
 import 'dotenv/config'
 import { connectDB } from './config/db.js'
+import { verifyEmailTransport } from './config/nodemailer.js'
 import { corsConfig } from './config/cors.js'
 import cookieParser from 'cookie-parser'
 
@@ -18,6 +19,7 @@ const app = express()
  * @function
  */
 connectDB()
+verifyEmailTransport()
 
 /**
  * Middleware de CORS con la configuración definida en corsConfig.
