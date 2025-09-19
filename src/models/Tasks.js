@@ -22,9 +22,10 @@ const taskSchema = new mongoose.Schema(
 
     description: {
       type: String,
-      required: [true, "La descripción es obligatoria"],
       trim: true,
+      maxlength: [500, "La descripción no puede superar los 500 caracteres"]
     },
+
 
     priority: {
       type: String,
