@@ -2,47 +2,33 @@ import nodemailer from "nodemailer"
 import dotenv from "dotenv";
 dotenv.config();
 
+
 /**
- * Configuration for the email transport.
- * Values are obtained from environment variables.
+ * Configuración para el transporte de correo electrónico.
+ * Se obtienen los valores desde las variables de entorno.
  *
  * @function
- * @returns {Object} Configuration object for nodemailer
- * @property {string} host - SMTP server of the email provider
- * @property {number} port - SMTP port (e.g., 465 or 587)
- * @property {Object} auth - Authentication credentials
- * @property {string} auth.user - Email user
- * @property {string} auth.pass - Password or application token
+ * @returns {Object} Objeto de configuración para nodemailer
+ * @property {string} host - Servidor SMTP del proveedor de correo
+ * @property {number} port - Puerto SMTP (ej. 465 o 587)
+ * @property {Object} auth - Credenciales de autenticación
+ * @property {string} auth.user - Usuario de correo electrónico
+ * @property {string} auth.pass - Contraseña o token de aplicación
  */
 const config = () => {
-    const port = Number(process.env.EMAIL_PORT) || 587
     return {
         host: process.env.EMAIL_HOST,
-        port,
-        secure: port === 465, // true for 465 (SSL), false for 587 (STARTTLS)
+        port: +process.env.EMAIL_PORT,
         auth: {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
-        },
-        tls: {
-            // useful in local environments with self-signed certificates
-            rejectUnauthorized: false
         }
     }
 }
 
 /**
- * Nodemailer transport instance configured with credentials.
+ * Instancia del transporte de nodemailer configurada con las credenciales.
  * 
  * @constant {Transporter}
  */
 export const transport = nodemailer.createTransport(config());
-
-export const verifyEmailTransport = async () => {
-    try {
-        await transport.verify();
-        console.log("✉️  SMTP ready to send emails");
-    } catch (err) {
-        console.error("❌ Error verifying SMTP:", err?.message || err);
-    }
-}

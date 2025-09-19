@@ -191,36 +191,17 @@ export const verifyAuth = async (req, res) => {
  * @returns {Promise<void>}
  */
 export const forgotPassword = async (req, res) => {
-  try {
-    const { email } = req.body;
-    const user = await User.findOne({ email });
+  const { email } = req.body;
+  const user = await User.findOne({ email });
 
-    if (!user) {
-      // Respond with 200 to avoid revealing whether the user exists, improving UX
-      return res.json({ msg: "Si el correo existe, enviaremos instrucciones." });
-    }
-
-    //  Development mode or without SMTP: return/log the link directly
-    const resetUrl = `${process.env.FRONTEND_URL}/resetPassword?id=${user._id}`;
-    const devMode = process.env.NODE_ENV !== 'production' || !process.env.EMAIL_HOST || !process.env.EMAIL_USER || !process.env.EMAIL_PASS;
-    if (devMode) {
-      console.log('🔗 Enlace de restablecimiento (DEV):', resetUrl);
-      return res.json({ msg: "Hemos generado el enlace de restablecimiento", resetUrl });
-    }
-
-    try {
-      await AuthEmail.sendConfirmationEmail({ name: user.firstName, email: user.email, id: user._id });
-    } catch (mailErr) {
-      console.error("Error enviando email:", mailErr);
-      // Respond with a generic success to avoid blocking the user's flow
-      return res.json({ msg: "Si el correo existe, enviaremos instrucciones." });
-    }
-
-    res.json({ msg: "Hemos enviado un email con las instrucciones" });
-  } catch (e) {
-    console.error("forgotPassword error:", e);
-    res.status(500).json({ error: "Error del servidor" });
+  if (!user) {
+    const error = new Error("No existe un usuario con ese email");
+    return res.status(404).json({ error: error.message });
   }
+
+  await AuthEmail.sendConfirmationEmail({ name: user.firstName, email: user.email, id: user._id });
+
+  res.json({ msg: "Hemos enviado un email con las instrucciones" });
 };
 
 /**
