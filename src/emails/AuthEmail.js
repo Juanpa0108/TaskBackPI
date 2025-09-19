@@ -1,22 +1,22 @@
 import { transport } from '../config/nodemailer.js';
 
 /**
- * Clase para el manejo de correos electrónicos de autenticación.
+ * Class for handling authentication-related emails.
  */
 export class AuthEmail {
     /**
-     * Envía un correo de confirmación para restablecer la contraseña.
-     *
-     * @async
-     * @function sendConfirmationEmail
-     * @memberof AuthEmail
-     * @static
-     * @param {Object} user - Información del usuario.
-     * @param {string} user.name - Nombre del usuario.
-     * @param {string} user.email - Correo electrónico del usuario.
-     * @param {string} user.token - Token único para restablecer la contraseña.
-     * @returns {Promise<void>} - No retorna nada, solo envía el correo.
-     */
+   * Sends a confirmation email to reset the user's password.
+   *
+   * @async
+   * @function sendConfirmationEmail
+   * @memberof AuthEmail
+   * @static
+   * @param {Object} user - User information.
+   * @param {string} user.name - User's name.
+   * @param {string} user.email - User's email address.
+   * @param {string} user.token - Unique token to reset the password.
+   * @returns {Promise<void>} - Does not return anything, only sends the email.
+   */
     static sendConfirmationEmail = async (user) => {
         const email = await transport.sendMail({
             from: 'Task App - Administrador de Proyectos <admin@taskflow.com>',

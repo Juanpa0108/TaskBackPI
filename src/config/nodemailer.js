@@ -4,16 +4,16 @@ dotenv.config();
 
 
 /**
- * Configuración para el transporte de correo electrónico.
- * Se obtienen los valores desde las variables de entorno.
+ * Configuration for the email transport.
+ * Values are retrieved from environment variables.
  *
  * @function
- * @returns {Object} Objeto de configuración para nodemailer
- * @property {string} host - Servidor SMTP del proveedor de correo
- * @property {number} port - Puerto SMTP (ej. 465 o 587)
- * @property {Object} auth - Credenciales de autenticación
- * @property {string} auth.user - Usuario de correo electrónico
- * @property {string} auth.pass - Contraseña o token de aplicación
+ * @returns {Object} Nodemailer configuration object
+ * @property {string} host - SMTP server of the email provider
+ * @property {number} port - SMTP port (e.g., 465 or 587)
+ * @property {Object} auth - Authentication credentials
+ * @property {string} auth.user - Email account username
+ * @property {string} auth.pass - Email account password or app token
  */
 const config = () => {
     return {
@@ -27,8 +27,8 @@ const config = () => {
 }
 
 /**
- * Instancia del transporte de nodemailer configurada con las credenciales.
- * 
- * @constant {Transporter}
+ * Nodemailer transport instance configured with credentials.
+ *
+ * @constant {import("nodemailer").Transporter}
  */
 export const transport = nodemailer.createTransport(config());
