@@ -172,8 +172,8 @@ router.patch(
     requireAuth,
     body("firstName").optional(),
     body("lastName").optional(),
-    body("email").optional().isEmail().withMessage("Email inválido").normalizeEmail(),
-    body("age").optional().isInt({ min: 12, max: 120 }).withMessage("Edad inválida").toInt(),
+    body("email").isEmail().withMessage("Email inválido").normalizeEmail(),
+    body("age").optional().isInt({ min: 13, max: 120 }).withMessage("Edad inválida").toInt(),
     body("password").optional().isLength({ min: 8 }).withMessage("La contraseña debe tener mínimo 8 caracteres"),
     handleInputErrors,
     updateUser
