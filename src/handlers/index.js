@@ -280,7 +280,7 @@ export const getUserById = async (req, res) => {
  * // Response: { "message": "Usuario actualizado correctamente", "user": {...} }
  */
 export const updateUser = async (req, res) => {
-  const { id } = req.user;
+  const { id } = req.user; //ID user
   const updates = req.body;
 
   try {
@@ -288,7 +288,14 @@ export const updateUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
-
+    
+    // Validate if user emais alredy exist in DB
+     if (updates.email && updates.email !== user.email) {
+      const emailExists = await User.findOne({ email: updates.email });
+      if (emailExists) {
+        return res.status(400).json({ error: "El correo ya existe en la base de datos" });
+      }
+    }
     // Only update if the value is not null, undefined, or an empty string
     Object.keys(updates).forEach((key) => {
       const value = updates[key];
