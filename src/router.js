@@ -124,7 +124,8 @@ router.get(
                 firstName: req.user.firstName,
                 lastName: req.user.lastName,
                 email: req.user.email,
-                age: req.user.age
+                age: req.user.age,
+                
             }
         })
     }
@@ -175,6 +176,7 @@ router.patch(
     body("email").isEmail().withMessage("Email inválido").normalizeEmail(),
     body("age").optional().isInt({ min: 13, max: 120 }).withMessage("Edad inválida").toInt(),
     body("password").optional().isLength({ min: 8 }).withMessage("La contraseña debe tener mínimo 8 caracteres"),
+    body("createdAt").optional().isISO8601().toDate(),
     handleInputErrors,
     updateUser
 )
