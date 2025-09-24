@@ -36,7 +36,8 @@ export const createAccount = async (req, res) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        age: user.age
+        age: user.age,
+        createdAt: user.createdAt
       },
       redirect: "/login.html"
     });
@@ -146,7 +147,8 @@ export const getCurrentUser = async (req, res) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
-        age: user.age
+        age: user.age,
+        createdAt: user.createdAt
       }
     });
   } catch (error) {
