@@ -9,7 +9,8 @@ import {
     forgotPassword,
     resetPassword,
     getUserById,
-    updateUser
+    updateUser,
+    deleteUserAccount
 } from "./handlers/index.js"
 import { handleInputErrors } from "./middleware/validation.js"
 import { requireAuth, requireGuest } from "./middleware/auth.js"
@@ -179,6 +180,18 @@ router.patch(
     body("createdAt").optional().isISO8601().toDate(),
     handleInputErrors,
     updateUser
+)
+
+/**
+ * Eliminar cuenta del usuario autenticado (requiere contraseña en body).
+ * @name DELETE /auth/user
+ */
+router.delete(
+    "/auth/user",
+    requireAuth,
+    body("password").notEmpty().withMessage("La contraseña es obligatoria"),
+    handleInputErrors,
+    deleteUserAccount
 )
 
 // // ============================================

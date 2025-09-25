@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import Task from "../models/Tasks.js";
 import { hashPassword, checkPassword, generateToken } from "../utils/auths.js";
 import { AuthEmail } from "../emails/AuthEmail.js";
 
@@ -311,5 +312,51 @@ export const updateUser = async (req, res) => {
   } catch (error) {
     console.error("Error en updateUser:", error);
     res.status(500).json({ error: "Error al actualizar datos del usuario" });
+  }
+};
+
+/**
+ * Elimina la cuenta del usuario autenticado y sus recursos relacionados (tareas).
+ * Requiere confirmación de contraseña.
+ * 
+ * @async
+ * @function deleteUserAccount
+ * @param {Object} req - HTTP request object
+ * @param {Object} res - HTTP response object
+ * @returns {Promise<void>}
+ */
+export const deleteUserAccount = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    const { password } = req.body || {};
+
+    if (!password) {
+      return res.status(400).json({ error: "La contraseña es obligatoria" });
+    }
+
+    // Releer el usuario con password
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    const isValid = await checkPassword(password, user.password);
+    if (!isValid) {
+      return res.status(401).json({ error: "Contraseña incorrecta" });
+    }
+
+    // Borrar tareas del usuario
+    await Task.deleteMany({ user: user._id });
+
+    // Borrar usuario
+    await User.findByIdAndDelete(user._id);
+
+    // Opcional: limpiar cookie de sesión si existe
+    res.clearCookie?.("authToken");
+
+    return res.status(200).json({ message: "Cuenta eliminada correctamente" });
+  } catch (error) {
+    console.error("Error en deleteUserAccount:", error);
+    return res.status(500).json({ error: "Error al eliminar la cuenta" });
   }
 };
