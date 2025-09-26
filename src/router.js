@@ -157,8 +157,8 @@ router.post(
 
 router.post(
     "/reset-password",
-    body("password").isLength({ min: 8 }).withMessage("La contraseña debe tener mínimo 8 caracteres"),
-    body("confirm-password").isLength({ min: 8 }).withMessage("La contraseña debe tener mínimo 8 caracteres"),
+    body("password"),
+    body("confirm-password"),
     handleInputErrors,
     resetPassword
 )
