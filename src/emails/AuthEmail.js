@@ -25,7 +25,7 @@ export class AuthEmail {
             html: `
                 <p>Hola ${user.name}, has solicitado restablecer tu contraseña en TaskFlow.</p>
                 <p>Haz click en el siguiente enlace para generar una nueva: 
-                <a href="${process.env.FRONTEND_URL}/resetPassword?id=${user.id}">Restablecer Contraseña</a></p>
+                <a href="${process.env.FRONTEND_URL}/resetPassword.html?id=${user.id}">Restablecer Contraseña</a></p>
                 <p>Si no solicitaste este cambio, puedes ignorar este mensaje.</p>
             `
         });
